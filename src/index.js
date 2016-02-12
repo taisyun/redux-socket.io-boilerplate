@@ -3,6 +3,7 @@ import startServer from './server/server'
 import path from 'path'
 import express from 'express'
 import webpack from 'webpack'
+import http from 'http'
 import webpackMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 import config from '../webpack.config.js'
@@ -10,12 +11,14 @@ import morgan from 'morgan'
 
 export const store = makeStore()
 
-startServer(store)
 
 const isDeveloping = process.env.NODE_ENV !== 'production'
 const port = isDeveloping ? 3000 : process.env.PORT
 const host = process.env.HOSTNAME ?  process.env.HOSTNAME : '0.0.0.0'
 const app = express()
+const httpServer = http.Server(app)
+
+startServer(store,httpServer)
 
 app.use(morgan('combined'))
 
@@ -46,7 +49,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'))
 })
 
-app.listen(port, host, (err) => {
+httpServer.listen(port, host, (err) => {
   if (err) {
     throw(err)
   }

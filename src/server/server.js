@@ -1,7 +1,7 @@
 import Server from 'socket.io'
 
-export default function startServer(store) {
-  const io = new Server().attach(8090)
+export default function startServer(store,httpServer) {
+  const io = new Server(httpServer)
 
   const items = io.of('/todolist')
   // Emit 'state' to socket.io when Store changes
