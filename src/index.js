@@ -46,7 +46,9 @@ if (isDeveloping) {
 }
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'))
+  if(!isDeveloping) {
+    res.sendFile(path.join(__dirname, 'dist/index.html'))
+  }
 })
 
 httpServer.listen(port, host, (err) => {
